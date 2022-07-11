@@ -1,0 +1,89 @@
+version: "3.9"
+
+networks:
+  app_subnet:
+    external: true
+    
+
+services:
+       api:
+         image: my_api
+         container_name: my_api
+         networks:
+               app_subnet :
+                    ipv4_address: 172.16.0.10
+         healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:5000/status"]
+            interval: 1m30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+         ports:
+              - "5000:5000"
+              #- target: 5000
+               # published: 5000
+               # protocol: tcp
+               # mode: host
+
+       authentication:
+          image: authentication
+          depends_on:
+                  - api #: 
+                    #condition : service_healthy 
+
+          container_name: authentication_test
+          networks:
+                    - app_subnet 
+                        
+          volumes:
+              - /home/oussama/Downloads/projet2/:/home/
+
+       predict1:
+          image: predict1
+          depends_on:
+                  - api #: 
+                    #condition : service_healthy 
+
+          container_name: predict1_test
+          networks:
+                    - app_subnet 
+                        
+          volumes:
+              - /home/oussama/Downloads/projet2/:/home/
+       predict2:
+          image: predict2
+          depends_on:
+                  - api #: 
+                    #condition : service_healthy 
+
+          container_name: predict2_test
+          networks:
+                    - app_subnet 
+                        
+          volumes:
+              - /home/oussama/Downloads/projet2/:/home/
+
+
+       predict3:
+          image: predict3
+          depends_on:
+                  - api #: 
+                    #condition : service_healthy 
+
+          container_name: predict3_test
+          networks:
+                    - app_subnet 
+                        
+          volumes:
+              - /home/oussama/Downloads/projet2/:/home/
+
+
+       
+volumes:
+  shared_volume:
+       name: shared_volume
+       driver: local
+       driver_opts:
+              type: 'none'
+              o: 'bind'
+              device: '/home/oussama/Downloads/projet2'
