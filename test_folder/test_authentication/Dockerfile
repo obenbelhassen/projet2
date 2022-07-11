@@ -1,0 +1,12 @@
+FROM debian:latest
+
+RUN apt-get update && apt-get install python3-pip -y && pip3 install requests
+
+ADD authentication.py /authentication/authentication.py
+
+WORKDIR /authentication/
+
+
+VOLUME ["/home/"]
+
+CMD python3 authentication.py
